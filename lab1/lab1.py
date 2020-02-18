@@ -64,24 +64,47 @@ cycle = 'c'
 while cycle != 'q':
     a = []
     b = []
-    fk = input("Вы желаете вводить с клавиатуры или из файла? k - с клавиатуры, f - из файла\n")
+    fk = input("Вы желаете вводить с клавиатуры или из файла? k - с клавиатуры, f - из файла, q - выйти из программы\n")
     if fk == 'k':
-        n = int(input("Введите размерность матрицы:\n"))
+        try:
+            n = int(input("Введите размерность матрицы:\n"))
+        except ValueError:
+            print("n должно быть числом")
+            continue
         print("Введите коэффициенты и свободные члены:")
+        print("***Должно быть введено", n, "строк по", n+1, "значений***")
+        flag_not_n_elements_in_string = False
+        flag_elements_not_numbers = False
         for i in range(n):
             s = input().split()
-            a.append([int(elem) for elem in s[:-1]])
-            b.append(int(s[-1]))
+            if len(s) != n+1:
+                print("В каждой строке должно быть по", n+1, "значений, вы ввели", len(s))
+                flag_not_n_elements_in_string = True
+                break
+            try:
+                a.append([int(elem) for elem in s[:-1]])
+                b.append(int(s[-1]))
+            except ValueError:
+                print("Все элементы должны быть числами")
+                flag_elements_not_numbers = True
+                break
+        if flag_not_n_elements_in_string or flag_elements_not_numbers:
+            continue
         solve(a, b, n)
     elif fk == 'f':
         src = input("Введите абсолютный или относительный путь к файлу\n")
-        with open(src) as file:
-            n = int(file.readline())
-            for line in file:
-                s = line.split()
-                a.append([int(elem) for elem in s[:-1]])
-                b.append(int(s[-1]))
-        solve(a, b, n)
+        try:
+            with open(src) as file:
+                n = int(file.readline())
+                for line in file:
+                    s = line.split()
+                    a.append([int(elem) for elem in s[:-1]])
+                    b.append(int(s[-1]))
+            solve(a, b, n)
+        except FileNotFoundError:
+            print("Неверный путь к файлу")
+    elif fk == 'q':
+        break
     else:
-        print("Неверный ввод")
+        print("Неверный ввод, введите f или k")
     cycle = input("Закончить программу или продолжить? q - выйти, c - продолжить\n")
