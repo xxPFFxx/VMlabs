@@ -4,10 +4,12 @@ def output_x(x):
 
 
 def output_matrix(a, b):
+    print("Треугольная матрица (включая преобразованный столбец B):")
     for i in range(len(a)):
-        for elem in a[i]:
-            print(elem, end='\t')
-        print(b[i])
+        for j in range(len(a[i])):
+            print("{:10.2f}".format(a[i][j]), end=" ")
+        print("|{:10.2f}".format(b[i]), end="")
+        print()
 
 
 def find_determinant(a, rev):
@@ -57,8 +59,9 @@ def solve(a, b, n):
             s += a[i][j] * x[j - i - 1]  # При j=i+1 нам нужен x[0], j=i+2 x[1], поэтому x[j-i-1]
         x.insert(0, (b[i] - s) / a[i][i])  # Поскольку мы вычисляем переменные с конца, новое значение ставим в начало
     print("Определитель равен", det)
-    output_x(x)
     output_matrix(a, b)
+    output_x(x)
+
 
 
 cycle = 'c'
@@ -74,33 +77,50 @@ while cycle != 'q':
             continue
         print("Введите коэффициенты и свободные члены:")
         print("***Должно быть введено", n, "строк по", n+1, "значений***")
-        flag_not_n_elements_in_string = False
-        flag_elements_not_numbers = False
+        flag_not_n_elements_in_string_keyboard = False
+        flag_elements_not_numbers_keyboard = False
         for i in range(n):
             s = input().split()
             if len(s) != n+1:
                 print("В каждой строке должно быть по", n+1, "значений, вы ввели", len(s))
-                flag_not_n_elements_in_string = True
+                flag_not_n_elements_in_string_keyboard = True
                 break
             try:
                 a.append([float(elem) for elem in s[:-1]])
                 b.append(float(s[-1]))
             except ValueError:
                 print("Все элементы должны быть числами")
-                flag_elements_not_numbers = True
+                flag_elements_not_numbers_keyboard = True
                 break
-        if flag_not_n_elements_in_string or flag_elements_not_numbers:
+        if flag_not_n_elements_in_string_keyboard or flag_elements_not_numbers_keyboard:
             continue
         solve(a, b, n)
     elif fk == 'f':
+        flag_not_n_elements_in_string_file = False
+        flag_elements_not_numbers_file = False
         src = input("Введите абсолютный или относительный путь к файлу\n")
         try:
             with open(src) as file:
-                n = int(file.readline())
+                try:
+                    n = int(file.readline())
+                except ValueError:
+                    print("n должно быть числом")
+                    continue
                 for line in file:
                     s = line.split()
-                    a.append([float(elem) for elem in s[:-1]])
-                    b.append(float(s[-1]))
+                    if len(s) != n + 1:
+                        print("В каждой строке должно быть по", n + 1, "значений")
+                        flag_not_n_elements_in_string_file = True
+                        break
+                    try:
+                        a.append([float(elem) for elem in s[:-1]])
+                        b.append(float(s[-1]))
+                    except ValueError:
+                        print("Все элементы должны быть числами")
+                        flag_elements_not_numbers_file = True
+                        break
+            if flag_not_n_elements_in_string_file or flag_elements_not_numbers_file:
+                continue
             solve(a, b, n)
         except FileNotFoundError:
             print("Неверный путь к файлу")
