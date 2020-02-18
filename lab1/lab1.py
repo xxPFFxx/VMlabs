@@ -1,3 +1,15 @@
+def output_x(x):
+    for i in range(len(x)):
+        print("x" + str(i + 1), "=", x[i])
+
+
+def output_matrix(a, b):
+    for i in range(len(a)):
+        for elem in a[i]:
+            print(elem, end='\t')
+        print(b[i])
+
+
 def find_determinant(a, rev):
     det = 1
     for i in range(len(a)):
@@ -9,8 +21,15 @@ def solve(a, b, n):
     rev = 0
     for i in range(n - 1):
         if a[i][i] == 0:
-            a[i], a[i + 1] = a[i + 1], a[i]  # подумать как это правильно обработать
-            b[i], b[i + 1] = b[i + 1], b[i]
+            out = False
+            for j in range(i + 1, n):
+                if a[j][i] != 0:
+                    a[i], a[j] = a[j], a[i]
+                    b[i], b[j] = b[j], b[i]
+                    break
+            if out == False:
+                print("Система не имеет решений или имеет бесконечно много")
+                return
         l = i
         for m in range(i + 1, n):
             if abs(a[m][i]) > abs(a[l][i]):
@@ -28,12 +47,17 @@ def solve(a, b, n):
             b[k] -= c * b[i]
     x = []
     det = find_determinant(a, rev)
+    if det == 0:
+        print("Система не имеет решений или имеет бесконечно много")
+        return
     for i in range(n - 1, -1, -1):
         s = 0
         for j in range(i + 1, n):
             s += a[i][j] * x[j - i - 1]  # При j=i+1 нам нужен x[0], j=i+2 x[1], поэтому x[j-i-1]
         x.insert(0, (b[i] - s) / a[i][i])  # Поскольку мы вычисляем переменные с конца, новое значение ставим в начало
-    return x, det
+    print("Определитель равен", det)
+    output_x(x)
+    output_matrix(a, b)
 
 
 cycle = 'c'
@@ -46,7 +70,5 @@ while cycle != 'q':
         s = input().split()
         a.append([int(elem) for elem in s[:-1]])
         b.append(int(s[-1]))
-    x, det = solve(a, b, n)
-    print(x)
-    print("Определитель равен", det)
+    solve(a, b, n)
     cycle = input("Закончить программу или продолжить? q - выйти, c - продолжить\n")
