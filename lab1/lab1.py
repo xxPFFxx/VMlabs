@@ -1,3 +1,12 @@
+def output_nev(a_start, b_start, x):
+    print("Вектор невязок:")
+    for i in range(len(x)):
+        s = 0
+        for j in range(len(x)):
+            s += a_start[i][j] * x[j]
+        print("r" + str(i + 1), "=", b_start[i] - s)
+
+
 def output_x(x):
     for i in range(len(x)):
         print("x" + str(i + 1), "=", x[i])
@@ -7,8 +16,8 @@ def output_matrix(a, b):
     print("Треугольная матрица (включая преобразованный столбец B):")
     for i in range(len(a)):
         for j in range(len(a[i])):
-            print("{:10.2f}".format(a[i][j]), end=" ")
-        print("|{:10.2f}".format(b[i]), end="")
+            print("{:20f}".format(a[i][j]), end=" ") #{:20.2f}, если покрасивее вывод нужен
+        print("|{:20f}".format(b[i]), end="")
         print()
 
 
@@ -20,6 +29,8 @@ def find_determinant(a, rev):
 
 
 def solve(a, b, n):
+    a_start = a
+    b_start = b
     rev = 0
     for i in range(n - 1):
         if a[i][i] == 0:
@@ -61,7 +72,7 @@ def solve(a, b, n):
     print("Определитель равен", det)
     output_matrix(a, b)
     output_x(x)
-
+    output_nev(a_start, b_start, x)
 
 
 cycle = 'c'
@@ -76,13 +87,13 @@ while cycle != 'q':
             print("n должно быть числом")
             continue
         print("Введите коэффициенты и свободные члены:")
-        print("***Должно быть введено", n, "строк по", n+1, "значений***")
+        print("***Должно быть введено", n, "строк по", n + 1, "значений***")
         flag_not_n_elements_in_string_keyboard = False
         flag_elements_not_numbers_keyboard = False
         for i in range(n):
             s = input().split()
-            if len(s) != n+1:
-                print("В каждой строке должно быть по", n+1, "значений, вы ввели", len(s))
+            if len(s) != n + 1:
+                print("В каждой строке должно быть по", n + 1, "значений, вы ввели", len(s))
                 flag_not_n_elements_in_string_keyboard = True
                 break
             try:
