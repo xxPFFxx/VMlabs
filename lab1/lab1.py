@@ -26,8 +26,9 @@ def solve(a, b, n):
                 if a[j][i] != 0:
                     a[i], a[j] = a[j], a[i]
                     b[i], b[j] = b[j], b[i]
+                    out = True
                     break
-            if out == False:
+            if not out:
                 print("Система не имеет решений или имеет бесконечно много")
                 return
         l = i
@@ -82,8 +83,8 @@ while cycle != 'q':
                 flag_not_n_elements_in_string = True
                 break
             try:
-                a.append([int(elem) for elem in s[:-1]])
-                b.append(int(s[-1]))
+                a.append([float(elem) for elem in s[:-1]])
+                b.append(float(s[-1]))
             except ValueError:
                 print("Все элементы должны быть числами")
                 flag_elements_not_numbers = True
@@ -98,13 +99,13 @@ while cycle != 'q':
                 n = int(file.readline())
                 for line in file:
                     s = line.split()
-                    a.append([int(elem) for elem in s[:-1]])
-                    b.append(int(s[-1]))
+                    a.append([float(elem) for elem in s[:-1]])
+                    b.append(float(s[-1]))
             solve(a, b, n)
         except FileNotFoundError:
             print("Неверный путь к файлу")
     elif fk == 'q':
         break
     else:
-        print("Неверный ввод, введите f или k")
+        print("Неверный ввод, введите f,k или q")
     cycle = input("Закончить программу или продолжить? q - выйти, c - продолжить\n")
