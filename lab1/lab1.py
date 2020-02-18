@@ -62,13 +62,26 @@ def solve(a, b, n):
 
 cycle = 'c'
 while cycle != 'q':
-    n = int(input("Введите размерность матрицы:\n"))
     a = []
     b = []
-    print("Введите коэффициенты и свободные члены:")
-    for i in range(n):
-        s = input().split()
-        a.append([int(elem) for elem in s[:-1]])
-        b.append(int(s[-1]))
-    solve(a, b, n)
+    fk = input("Вы желаете вводить с клавиатуры или из файла? k - с клавиатуры, f - из файла\n")
+    if fk == 'k':
+        n = int(input("Введите размерность матрицы:\n"))
+        print("Введите коэффициенты и свободные члены:")
+        for i in range(n):
+            s = input().split()
+            a.append([int(elem) for elem in s[:-1]])
+            b.append(int(s[-1]))
+        solve(a, b, n)
+    elif fk == 'f':
+        src = input("Введите абсолютный или относительный путь к файлу\n")
+        with open(src) as file:
+            n = int(file.readline())
+            for line in file:
+                s = line.split()
+                a.append([int(elem) for elem in s[:-1]])
+                b.append(int(s[-1]))
+        solve(a, b, n)
+    else:
+        print("Неверный ввод")
     cycle = input("Закончить программу или продолжить? q - выйти, c - продолжить\n")
