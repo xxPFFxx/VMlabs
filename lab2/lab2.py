@@ -31,18 +31,6 @@ def rectangle_mid(number, lower, higher, n):
     return h * s
 
 
-def find_n(number, lower, higher, n, accuracy):
-    h = (higher - lower) / n
-    i0 = rectangle_mid(number, lower, h, n)
-    for i in range(12):
-        n *= 2
-        i1 = rectangle_mid(number, lower, h, n)
-        if abs(i1 - i0) <= accuracy:
-            return n
-        i0 = i1
-    return -1
-
-
 def find_n_left(number, lower, higher, n, accuracy):
     h = (higher - lower) / n
     i0 = rectangle_mid(number, lower, h, n)
@@ -100,10 +88,10 @@ def solve(number, lower, higher, accuracy):
     n = 4
     new_n_left = find_n_left(number, lower, higher, n, accuracy)
     if new_n_left == -1:
-        print("Заданная точность не достигнута")
+        print("Заданная точность не достигнута (метод левых прямоугольников)")
     new_n_right = find_n_right(number, lower, higher, n, accuracy)
     if new_n_right == -1:
-        print("Заданная точность не достигнута")
+        print("Заданная точность не достигнута (метод правых прямоугольников)")
     new_n_mid = find_n_mid(number, lower, higher, n, accuracy)
     if new_n_mid == -1:
         print("Заданная точность не достигнута")
