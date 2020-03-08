@@ -4,7 +4,7 @@ def output_nev(a_start, b_start, x):
         s = 0
         for j in range(len(x)):
             s += a_start[i][j] * x[j]
-        print("r" + str(i + 1), "=", b_start[i] - s)
+        print("r" + str(i + 1), "=", "{:.20f}".format(b_start[i] - s))
 
 
 def output_x(x):
@@ -25,6 +25,7 @@ def find_determinant(a, rev):
     det = 1
     for i in range(len(a)):
         det *= a[i][i]
+    print("Было", rev, "перестановок")
     return det if rev % 2 == 0 else -det
 
 
