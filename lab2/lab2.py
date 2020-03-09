@@ -33,7 +33,7 @@ def rectangle_mid(number, lower, higher, n):
 
 def find_n_left(number, lower, higher, n, accuracy):
     h = (higher - lower) / n
-    i0 = rectangle_mid(number, lower, h, n)
+    i0 = rectangle_left(number, lower, h, n)
     for i in range(12):
         n *= 2
         i1 = rectangle_left(number, lower, h, n)
@@ -47,7 +47,7 @@ def find_n_left(number, lower, higher, n, accuracy):
 
 def find_n_right(number, lower, higher, n, accuracy):
     h = (higher - lower) / n
-    i0 = rectangle_mid(number, lower, h, n)
+    i0 = rectangle_right(number, lower, h, n)
     for i in range(12):
         n *= 2
         i1 = rectangle_right(number, lower, h, n)
