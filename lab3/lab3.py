@@ -9,6 +9,11 @@ def f(x):
     return x ** 3 - 1.89 * x ** 2 - 2 * x + 1.76
 
 
+def fi(x):
+    # return x**3 + 4
+    return (x ** 3 - 1.89 * x ** 2 + 1.76) / 2
+
+
 def second_derivative(x):
     # return 6 * x
     return 6 * x - 3.78
@@ -65,8 +70,21 @@ else:
 secants.append(float(input("Введите x1\n")))
 i = 1
 while True:
-    secants.append(secants[i]-f(secants[i])*(secants[i]-secants[i-1])/(f(secants[i])-f(secants[i-1])))
-    print(i, secants[i-1], f(secants[i-1]), secants[i], f(secants[i]), secants[i+1], f(secants[i+1]), abs(secants[i+1] - secants[i]))
-    if abs(secants[i+1] - secants[i]) <= e2 or abs(f(secants[i+1])) <= e2:
+    secants.append(secants[i] - f(secants[i]) * (secants[i] - secants[i - 1]) / (f(secants[i]) - f(secants[i - 1])))
+    print(i, secants[i - 1], f(secants[i - 1]), secants[i], f(secants[i]), secants[i + 1], f(secants[i + 1]),
+          abs(secants[i + 1] - secants[i]))
+    if abs(secants[i + 1] - secants[i]) <= e2 or abs(f(secants[i + 1])) <= e2:
         break
     i += 1
+
+iterations = []
+print("Метод простых итераций для центрального корня")
+iterations.append(float(input("Введите начальное приближение:\n")))
+e3 = float(input("Введите точность\n"))
+i = 0
+while True:
+    iterations.append(fi(iterations[i]))
+    print(i+1, iterations[i], f(iterations[i]), iterations[i+1], abs(iterations[i+1]-iterations[i]))
+    i+=1
+    if abs(iterations[i]-iterations[i-1])<=e3:
+        break
