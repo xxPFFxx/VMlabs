@@ -3,6 +3,8 @@ x2 = -1.15624  # (интервал изоляции: [-2;-1])
 x3 = 0.629971  # (интервал изоляции: [0;1])
 x1 = 2.41627  # (интервал изоляции: [2;3])
 
+import pylab
+
 
 def f(x):
     # return x**3 - x + 4
@@ -18,7 +20,13 @@ def second_derivative(x):
     # return 6 * x
     return 6 * x - 3.78
 
-
+xmin = -10.0
+xmax = 10.0
+dx = 0.01
+xlist = [x/10.0 for x in range(-40,40)]
+ylist = [f(x) for x in xlist]
+pylab.plot(xlist,ylist)
+pylab.show()
 # e1 = e2 = e3 = 0.01  # Точность вычисления
 # Границы интервалов изоляции корней
 # r1 = 3
@@ -28,32 +36,32 @@ def second_derivative(x):
 # r3 = 1
 # l3 = 0
 
-# hords = []
-# print("Метод хорд для правого корня")
-# l1 = float(input("Введите левую границу\n"))
-# r1 = float(input("Введите правую границу\n"))
-# e1 = float(input("Введите точность\n"))
-# if l1 <= x1 <= r1:
-#     if f(l1) * second_derivative(l1) > 0:
-#         hords.append(r1)
-#         i = 0
-#         print(i, l1, r1, hords[i], f(l1), f(r1), f(hords[i]), '-')
-#         while True:
-#             hords.append(l1 - f(l1) * (hords[i] - l1) / (f(hords[i]) - f(l1)))
-#             i += 1
-#             print(i, l1, hords[i-1], hords[i], f(l1), f(hords[i-1]), f(hords[i]), abs(hords[i] - hords[i - 1]))
-#             if abs(hords[i] - hords[i - 1]) <= e1 or abs(f(hords[i])) <= e1:
-#                 break
-#     else:
-#         hords.append(l1)
-#         i = 0
-#         print(i, l1, r1, hords[i], f(l1), f(r1), f(hords[i]), '-')
-#         while True:
-#             hords.append(hords[i] - f(hords[i]) * (r1 - hords[i]) / (f(r1) - f(hords[i])))
-#             i += 1
-#             print(i, hords[i-1], r1, hords[i], f(hords[i-1]), f(r1), f(hords[i]), abs(hords[i]-hords[i-1]))
-#             if abs(hords[i] - hords[i - 1]) <= e1 or abs(f(hords[i])) <= e1:
-#                 break
+hords = []
+print("Метод хорд для правого корня")
+l1 = float(input("Введите левую границу\n"))
+r1 = float(input("Введите правую границу\n"))
+e1 = float(input("Введите точность\n"))
+if l1 <= x1 <= r1:
+    if f(l1) * second_derivative(l1) > 0:
+        hords.append(r1)
+        i = 0
+        print(i, l1, r1, hords[i], f(l1), f(r1), f(hords[i]), '-')
+        while True:
+            hords.append(l1 - f(l1) * (hords[i] - l1) / (f(hords[i]) - f(l1)))
+            i += 1
+            print(i, l1, hords[i - 1], hords[i], f(l1), f(hords[i - 1]), f(hords[i]), abs(hords[i] - hords[i - 1]))
+            if abs(hords[i] - hords[i - 1]) <= e1 or abs(f(hords[i])) <= e1:
+                break
+    else:
+        hords.append(l1)
+        i = 0
+        print(i, l1, r1, hords[i], f(l1), f(r1), f(hords[i]), '-')
+        while True:
+            hords.append(hords[i] - f(hords[i]) * (r1 - hords[i]) / (f(r1) - f(hords[i])))
+            i += 1
+            print(i, hords[i - 1], r1, hords[i], f(hords[i - 1]), f(r1), f(hords[i]), abs(hords[i] - hords[i - 1]))
+            if abs(hords[i] - hords[i - 1]) <= e1 or abs(f(hords[i])) <= e1:
+                break
 
 secants = []
 print("Метод секущих для левого корня")
@@ -84,7 +92,7 @@ e3 = float(input("Введите точность\n"))
 i = 0
 while True:
     iterations.append(fi(iterations[i]))
-    print(i+1, iterations[i], f(iterations[i]), iterations[i+1], abs(iterations[i+1]-iterations[i]))
-    i+=1
-    if abs(iterations[i]-iterations[i-1])<=e3:
+    print(i + 1, iterations[i], f(iterations[i]), iterations[i + 1], abs(iterations[i + 1] - iterations[i]))
+    i += 1
+    if abs(iterations[i] - iterations[i - 1]) <= e3:
         break
