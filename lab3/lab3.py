@@ -49,13 +49,109 @@ def second_derivative(x):
     return 6 * x - 3.78
 
 
-xmin = -10.0
-xmax = 10.0
-dx = 0.01
-xlist = [x / 10.0 for x in range(-40, 40)]
-ylist = [f(x) for x in xlist]
-pylab.plot(xlist, ylist)
-pylab.show()
+def hords_method(l1, r1, e1, output):
+    hords = []
+
+    if l1 <= x1 <= r1:
+        if f(l1) * second_derivative(l1) > 0:
+            hords.append(r1)
+            i = 0
+            while True:
+                hords.append(l1 - f(l1) * (hords[i] - l1) / (f(hords[i]) - f(l1)))
+                i += 1
+                if abs(hords[i] - hords[i - 1]) <= e1 or abs(f(hords[i])) <= e1:
+                    break
+        else:
+            hords.append(l1)
+            i = 0
+            while True:
+                hords.append(hords[i] - f(hords[i]) * (r1 - hords[i]) / (f(r1) - f(hords[i])))
+                i += 1
+                if abs(hords[i] - hords[i - 1]) <= e1 or abs(f(hords[i])) <= e1:
+                    break
+    if output == 'k':
+        print("Найденный корень:", hords[-1])
+        print("Значение функции в корне:", f(hords[-1]))
+        print("Число итераций:", i)
+    elif output == 'f':
+        with open('output.txt', 'w') as file:
+            file.write("Найденный корень: " + str(hords[-1]))
+            file.write("\nЗначение функции в корне: " + str(f(hords[-1])))
+            file.write("\nЧисло итераций: " + str(i))
+
+
+def secants_method(l2, r2, e2, x1, output):
+    secants = []
+
+    if f(l2) * second_derivative(l2) > 0:
+        secants.append(l2)
+    else:
+        secants.append(r2)
+    secants.append(x1)
+    i = 1
+    while True:
+        secants.append(secants[i] - f(secants[i]) * (secants[i] - secants[i - 1]) / (f(secants[i]) - f(secants[i - 1])))
+        if abs(secants[i + 1] - secants[i]) <= e2 or abs(f(secants[i + 1])) <= e2:
+            break
+        i += 1
+    if output == 'k':
+        print("Найденный корень:", secants[-1])
+        print("Значение функции в корне:", f(secants[-1]))
+        print("Число итераций:", i)
+    elif output == 'f':
+        with open('output.txt', 'a') as file:
+            file.write("\nНайденный корень: " + str(secants[-1]))
+            file.write("\nЗначение функции в корне: " + str(f(secants[-1])))
+            file.write("\nЧисло итераций: " + str(i))
+
+
+def iterations_method(l3, r3, e3, output):
+    iterations = []
+    iterations.append((l3 + r3) / 2)
+    i = 0
+    if abs(derivative_fi1(l3)) < 1 and abs(derivative_fi1(r3)) < 1:
+        while True:
+            iterations.append(fi1(iterations[i]))
+            i += 1
+            if abs(iterations[i] - iterations[i - 1]) <= e3:
+                break
+
+    elif abs(derivative_fi2(l3)) < 1 and abs(derivative_fi2(r3)) < 1:
+        while True:
+            iterations.append(fi2(iterations[i]))
+            i += 1
+            if abs(iterations[i] - iterations[i - 1]) <= e3:
+                break
+    elif abs(derivative_fi3(l3)) < 1 and abs(derivative_fi3(r3)) < 1:
+        while True:
+            iterations.append(fi3(iterations[i]))
+            i += 1
+            if abs(iterations[i] - iterations[i - 1]) <= e3:
+                break
+    else:
+        while True:
+            iterations.append(fi4(iterations[i], l3, r3))
+            i += 1
+            if abs(iterations[i] - iterations[i - 1]) <= e3:
+                break
+    if output == 'k':
+        print("Найденный корень:", iterations[-1])
+        print("Значение функции в корне:", f(iterations[-1]))
+        print("Число итераций:", i)
+    elif output == 'f':
+        with open('output.txt', 'a') as file:
+            file.write("\nНайденный корень: " + str(iterations[-1]))
+            file.write("\nЗначение функции в корне: " + str(f(iterations[-1])))
+            file.write("\nЧисло итераций: " + str(i))
+
+
+# xmin = -10.0
+# # xmax = 10.0
+# # dx = 0.01
+# # xlist = [x / 10.0 for x in range(-40, 40)]
+# # ylist = [f(x) for x in xlist]
+# # pylab.plot(xlist, ylist)
+# # pylab.show()
 # e1 = e2 = e3 = 0.01  # Точность вычисления
 # Границы интервалов изоляции корней
 # r1 = 3
@@ -65,89 +161,31 @@ pylab.show()
 # r3 = 1
 # l3 = 0
 
-hords = []
-print("Метод хорд для правого корня")
-l1 = float(input("Введите левую границу\n"))
-r1 = float(input("Введите правую границу\n"))
-e1 = float(input("Введите точность\n"))
-if l1 <= x1 <= r1:
-    if f(l1) * second_derivative(l1) > 0:
-        hords.append(r1)
-        i = 0
-        print(i, l1, r1, hords[i], f(l1), f(r1), f(hords[i]), '-')
-        while True:
-            hords.append(l1 - f(l1) * (hords[i] - l1) / (f(hords[i]) - f(l1)))
-            i += 1
-            print(i, l1, hords[i - 1], hords[i], f(l1), f(hords[i - 1]), f(hords[i]), abs(hords[i] - hords[i - 1]))
-            if abs(hords[i] - hords[i - 1]) <= e1 or abs(f(hords[i])) <= e1:
-                break
-    else:
-        hords.append(l1)
-        i = 0
-        print(i, l1, r1, hords[i], f(l1), f(r1), f(hords[i]), '-')
-        while True:
-            hords.append(hords[i] - f(hords[i]) * (r1 - hords[i]) / (f(r1) - f(hords[i])))
-            i += 1
-            print(i, hords[i - 1], r1, hords[i], f(hords[i - 1]), f(r1), f(hords[i]), abs(hords[i] - hords[i - 1]))
-            if abs(hords[i] - hords[i - 1]) <= e1 or abs(f(hords[i])) <= e1:
-                break
-
-secants = []
-print("Метод секущих для левого корня")
-l2 = float(input("Введите левую границу\n"))
-
-r2 = float(input("Введите правую границу\n"))
-e2 = float(input("Введите точность\n"))
-if f(l2) * second_derivative(l2) > 0:
-    print("x0 =", l2)
-    secants.append(l2)
-else:
-    print("x0 =", r2)
-    secants.append(r2)
-secants.append(float(input("Введите x1\n")))
-i = 1
-while True:
-    secants.append(secants[i] - f(secants[i]) * (secants[i] - secants[i - 1]) / (f(secants[i]) - f(secants[i - 1])))
-    print(i, secants[i - 1], f(secants[i - 1]), secants[i], f(secants[i]), secants[i + 1], f(secants[i + 1]),
-          abs(secants[i + 1] - secants[i]))
-    if abs(secants[i + 1] - secants[i]) <= e2 or abs(f(secants[i + 1])) <= e2:
-        break
-    i += 1
-
-iterations = []
-print("Метод простых итераций для центрального корня")
-l3 = float(input("Введите левую границу\n"))
-r3 = float(input("Введите правую границу\n"))
-# iterations.append(float(input("Введите начальное приближение:\n")))
-e3 = float(input("Введите точность\n"))
-iterations.append((l3+r3)/2)
-i = 0
-if abs(derivative_fi1(l3)) < 1 and abs(derivative_fi1(r3)) < 1:
-    while True:
-        iterations.append(fi1(iterations[i]))
-        print(i + 1, iterations[i], f(iterations[i]), iterations[i + 1], abs(iterations[i + 1] - iterations[i]))
-        i += 1
-        if abs(iterations[i] - iterations[i - 1]) <= e3:
-            break
-
-elif abs(derivative_fi2(l3)) < 1 and abs(derivative_fi2(r3)) < 1:
-    while True:
-        iterations.append(fi2(iterations[i]))
-        print(i + 1, iterations[i], f(iterations[i]), iterations[i + 1], abs(iterations[i + 1] - iterations[i]))
-        i += 1
-        if abs(iterations[i] - iterations[i - 1]) <= e3:
-            break
-elif abs(derivative_fi3(l3)) < 1 and abs(derivative_fi3(r3)) < 1:
-    while True:
-        iterations.append(fi3(iterations[i]))
-        print(i + 1, iterations[i], f(iterations[i]), iterations[i + 1], abs(iterations[i + 1] - iterations[i]))
-        i += 1
-        if abs(iterations[i] - iterations[i - 1]) <= e3:
-            break
-else:
-    while True:
-        iterations.append(fi4(iterations[i],l3,r3))
-        print(i + 1, iterations[i], f(iterations[i]), iterations[i + 1], abs(iterations[i + 1] - iterations[i]))
-        i += 1
-        if abs(iterations[i] - iterations[i - 1]) <= e3:
-            break
+inp = input('Вы желаете вводить с клавиатуры(k) или из файла(f)?\n')
+out = input('Вы желаете выводить на консоль(k) или в файл(f)?\n')
+if inp == 'k':
+    print("Метод хорд для правого корня")
+    l1 = float(input("Введите левую границу\n"))
+    r1 = float(input("Введите правую границу\n"))
+    e1 = float(input("Введите точность\n"))
+    hords_method(l1, r1, e1, out)
+    print("Метод секущих для левого корня")
+    l2 = float(input("Введите левую границу\n"))
+    r2 = float(input("Введите правую границу\n"))
+    e2 = float(input("Введите точность\n"))
+    x1 = float(input("Введите x1\n"))
+    secants_method(l2, r2, e2, x1, out)
+    print("Метод простых итераций для центрального корня")
+    l3 = float(input("Введите левую границу\n"))
+    r3 = float(input("Введите правую границу\n"))
+    e3 = float(input("Введите точность\n"))
+    iterations_method(l3, r3, e3, out)
+elif inp == 'f':
+    path = input('Введите путь до файла\n')
+    with open(path, 'r') as file:
+        l1, r1, e1 = map(float, file.readline().split())
+        hords_method(l1, r1, e1, out)
+        l2, r2, e2, x1 = map(float, file.readline().split())
+        secants_method(l2, r2, e2, x1, out)
+        l3, r3, e3 = map(float, file.readline().split())
+        iterations_method(l3, r3, e3, out)
