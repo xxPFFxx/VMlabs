@@ -11,21 +11,50 @@ def f(x):
     return x ** 3 - 1.89 * x ** 2 - 2 * x + 1.76
 
 
-def fi(x):
-    # return x**3 + 4
+def fi1(x):
     return (x ** 3 - 1.89 * x ** 2 + 1.76) / 2
+
+
+def derivative_fi1(x):
+    return 1.5 * (x - 1.26) * x
+
+
+def fi2(x):
+    return ((x ** 3 - 2 * x + 1.76) / 1.89) ** (1 / 2)
+
+
+def derivative_fi2(x):
+    return (1.09109 * x ** 2 - 0.727393) / ((x ** 3 - 2 * x + 1.76) ** (1 / 2))
+
+
+def fi3(x):
+    return (1.89 * x ** 2 + 2 * x - 1.76) ** (1 / 3)
+
+
+def derivative_fi3(x):
+    return (1.26 * x + 2 / 3) / ((1.89 * x ** 2 + 2 * x - 1.76) ** (2 / 3))
+
+
+def fi4(x, a, b):
+    l = -1 / max(derivative(a), derivative(b))
+    return x + l * f(x)
+
+
+def derivative(x):
+    return 3 * x ** 2 - 3.78 * x - 2
 
 
 def second_derivative(x):
     # return 6 * x
     return 6 * x - 3.78
 
+
 xmin = -10.0
 xmax = 10.0
 dx = 0.01
-xlist = [x/10.0 for x in range(-40,40)]
+xlist = [x / 10.0 for x in range(-40, 40)]
 ylist = [f(x) for x in xlist]
-pylab.plot(xlist,ylist)
+pylab.plot(xlist, ylist)
 pylab.show()
 # e1 = e2 = e3 = 0.01  # Точность вычисления
 # Границы интервалов изоляции корней
@@ -87,12 +116,38 @@ while True:
 
 iterations = []
 print("Метод простых итераций для центрального корня")
-iterations.append(float(input("Введите начальное приближение:\n")))
+l3 = float(input("Введите левую границу\n"))
+r3 = float(input("Введите правую границу\n"))
+# iterations.append(float(input("Введите начальное приближение:\n")))
 e3 = float(input("Введите точность\n"))
+iterations.append((l3+r3)/2)
 i = 0
-while True:
-    iterations.append(fi(iterations[i]))
-    print(i + 1, iterations[i], f(iterations[i]), iterations[i + 1], abs(iterations[i + 1] - iterations[i]))
-    i += 1
-    if abs(iterations[i] - iterations[i - 1]) <= e3:
-        break
+if abs(derivative_fi1(l3)) < 1 and abs(derivative_fi1(r3)) < 1:
+    while True:
+        iterations.append(fi1(iterations[i]))
+        print(i + 1, iterations[i], f(iterations[i]), iterations[i + 1], abs(iterations[i + 1] - iterations[i]))
+        i += 1
+        if abs(iterations[i] - iterations[i - 1]) <= e3:
+            break
+
+elif abs(derivative_fi2(l3)) < 1 and abs(derivative_fi2(r3)) < 1:
+    while True:
+        iterations.append(fi2(iterations[i]))
+        print(i + 1, iterations[i], f(iterations[i]), iterations[i + 1], abs(iterations[i + 1] - iterations[i]))
+        i += 1
+        if abs(iterations[i] - iterations[i - 1]) <= e3:
+            break
+elif abs(derivative_fi3(l3)) < 1 and abs(derivative_fi3(r3)) < 1:
+    while True:
+        iterations.append(fi3(iterations[i]))
+        print(i + 1, iterations[i], f(iterations[i]), iterations[i + 1], abs(iterations[i + 1] - iterations[i]))
+        i += 1
+        if abs(iterations[i] - iterations[i - 1]) <= e3:
+            break
+else:
+    while True:
+        iterations.append(fi4(iterations[i],l3,r3))
+        print(i + 1, iterations[i], f(iterations[i]), iterations[i + 1], abs(iterations[i + 1] - iterations[i]))
+        i += 1
+        if abs(iterations[i] - iterations[i - 1]) <= e3:
+            break
