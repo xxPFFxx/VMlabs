@@ -78,6 +78,8 @@ def hords_method(l1, r1, e1, output):
             file.write("Найденный корень: " + str(hords[-1]))
             file.write("\nЗначение функции в корне: " + str(f(hords[-1])))
             file.write("\nЧисло итераций: " + str(i))
+    else:
+        print('Неверно указан режим вывода. Для вывода на консоль нажмите k, для вывода в файл f')
 
 
 def secants_method(l2, r2, e2, x1, output):
@@ -130,6 +132,7 @@ def iterations_method(l3, r3, e3, output):
                 break
     else:
         while True:
+
             iterations.append(fi4(iterations[i], l3, r3))
             i += 1
             if abs(iterations[i] - iterations[i - 1]) <= e3:
@@ -145,13 +148,13 @@ def iterations_method(l3, r3, e3, output):
             file.write("\nЧисло итераций: " + str(i))
 
 
-# xmin = -10.0
-# # xmax = 10.0
-# # dx = 0.01
-# # xlist = [x / 10.0 for x in range(-40, 40)]
-# # ylist = [f(x) for x in xlist]
-# # pylab.plot(xlist, ylist)
-# # pylab.show()
+def draw_plot():
+    xlist = [x / 10.0 for x in range(-40, 40)]
+    ylist = [f(x) for x in xlist]
+    pylab.plot(xlist, ylist)
+    pylab.show()
+
+
 # e1 = e2 = e3 = 0.01  # Точность вычисления
 # Границы интервалов изоляции корней
 # r1 = 3
@@ -161,6 +164,8 @@ def iterations_method(l3, r3, e3, output):
 # r3 = 1
 # l3 = 0
 
+
+# draw_plot()
 inp = input('Вы желаете вводить с клавиатуры(k) или из файла(f)?\n')
 out = input('Вы желаете выводить на консоль(k) или в файл(f)?\n')
 if inp == 'k':
@@ -182,10 +187,16 @@ if inp == 'k':
     iterations_method(l3, r3, e3, out)
 elif inp == 'f':
     path = input('Введите путь до файла\n')
-    with open(path, 'r') as file:
-        l1, r1, e1 = map(float, file.readline().split())
-        hords_method(l1, r1, e1, out)
-        l2, r2, e2, x1 = map(float, file.readline().split())
-        secants_method(l2, r2, e2, x1, out)
-        l3, r3, e3 = map(float, file.readline().split())
-        iterations_method(l3, r3, e3, out)
+    try:
+        with open(path, 'r') as file:
+            l1, r1, e1 = map(float, file.readline().split())
+            hords_method(l1, r1, e1, out)
+            l2, r2, e2, x1 = map(float, file.readline().split())
+            secants_method(l2, r2, e2, x1, out)
+            l3, r3, e3 = map(float, file.readline().split())
+            iterations_method(l3, r3, e3, out)
+    except FileNotFoundError:
+        print('Путь к файлу с входными данными указан неверно или такого файла не существует. Проверьте корректность '
+              'введенных данных:', path)
+else:
+    print('Неверно указан режим ввода. Для ввода с клавиатуры нажмите k, для ввода из файла f')
