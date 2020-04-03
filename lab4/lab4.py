@@ -23,7 +23,22 @@ b = (sxx*sy - sx*sxy)/(sxx*n - sx*sx)
 # plt.plot(x,ylin)
 # plt.grid(True)
 # plt.show()
-s = 0
+slin = 0
 for i in range(n):
-    s += (a*x[i]+b-y[i])**2
-print(s)
+    slin += (a*x[i]+b-y[i])**2
+# print(slin)
+from lab1 import lab1
+sxxx = sum([elem**3 for elem in x])
+sxxxx = sum([elem**4 for elem in x])
+sxxy = sum([y[i]*x[i]**2 for i in range(n)])
+a0, a1, a2 = lab1.solve([[n,sx,sxx],[sx,sxx,sxxx],[sxx,sxxx,sxxxx]],[sy,sxy, sxxy],3)
+# for i in range(n):
+#     print(a2*x[i]**2+a1*x[i]+a0, a2*x[i]**2+a1*x[i]+a0 - y[i])
+ypol = [a2*x[i]**2+a1*x[i]+a0 for i in range(n)]
+# plt.plot(x,ypol)
+# plt.grid(True)
+# plt.show()
+spol = 0
+for i in range(n):
+    spol += (a2*x[i]**2+a1*x[i]+a0-y[i])**2
+print(spol)
