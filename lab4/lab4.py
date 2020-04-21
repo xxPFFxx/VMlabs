@@ -24,13 +24,14 @@ def main_action(x, y, out):
         print("{:20}{:20}{:20}{:20}{:20}{:20}".format('c', '-', c, '-', '-', '-'))
     elif out == 'f':
         with open('output.txt', 'w') as f:
-            f.write("{:20}{:20}{:20}{:20}{:20}{:20}\n".format('Вид fi(x)', 'Линейная', 'Полиномиальная', 'Экспоненциальная',
+            f.write(
+                "{:20}{:20}{:20}{:20}{:20}{:20}\n".format('Вид fi(x)', 'Линейная', 'Полиномиальная', 'Экспоненциальная',
                                                           'Логарифмическая', 'Степенная'))
             f.write("{:10}{:10}{:20}{:20}{:20}{:20}{:20}\n".format('X', 'Y', 'F = ax+b', 'F = ax^2+bx+c',
-                                                               'F = ae^(bx)', 'F = alnx+b', 'F = ax^b'))
+                                                                   'F = ae^(bx)', 'F = alnx+b', 'F = ax^b'))
             for i in range(len(x)):
                 f.write("{:10}{:10}{:20}{:20}{:20}{:20}{:20}\n".format(x[i], y[i], fi1[i], fi2[i],
-                                                                   fi3[i], fi4[i], fi5[i]))
+                                                                       fi3[i], fi4[i], fi5[i]))
             f.write("{:20}{:20}{:20}{:20}{:20}{:20}\n".format('S', s1, s2, s3, s4, s5))
             f.write("{:20}{:20}{:20}{:20}{:20}{:20}\n".format('Среднекв. отклонение', sko1, sko2, sko3, sko4, sko5))
             f.write("{:20}{:20}{:20}{:20}{:20}{:20}\n".format('a', a1, a2, a3, a4, a5))
@@ -47,26 +48,23 @@ def sko(fi, y):
     return sqrt(res / len(fi))
 
 
+def find_coeffs(sx, sy, sxx, sxy, n):
+    return (sxy * n - sx * sy) / (sxx * n - sx * sx), (sxx * sy - sx * sxy) / (sxx * n - sx * sx)
+
+
 def linear(x, y, n):
-    # Линейная функция
     sx = sum(x)
     sy = sum(y)
     sxx = sum([elem ** 2 for elem in x])
     sxy = sum([y[i] * x[i] for i in range(n)])
-    a = (sxy * n - sx * sy) / (sxx * n - sx * sx)
-    b = (sxx * sy - sx * sxy) / (sxx * n - sx * sx)
-    # print(a,b)
-    # for i in range(n):
-    #     print(a*x[i]+b, a*x[i]+b-y[i])
+    a, b = find_coeffs(sx, sy, sxx, sxy, n)
     ylin = [a * x[i] + b for i in range(n)]
-    plt.plot(x, ylin)
+    plt.plot(x, ylin, label = 'Линейный')
     plt.grid(True)
-    # plt.show()
+    #plt.show()
     slin = 0
     for i in range(n):
         slin += (ylin[i] - y[i]) ** 2
-    # print(slin)
-    # print(sko(ylin, y))
     return ylin, slin, sko(ylin, y), a, b
 
 
@@ -80,17 +78,13 @@ def polynomial(x, y, n):
     sxxxx = sum([elem ** 4 for elem in x])
     sxxy = sum([y[i] * x[i] ** 2 for i in range(n)])
     a0, a1, a2 = lab1.solve([[n, sx, sxx], [sx, sxx, sxxx], [sxx, sxxx, sxxxx]], [sy, sxy, sxxy], 3)
-    # for i in range(n):
-    #     print(a2*x[i]**2+a1*x[i]+a0, a2*x[i]**2+a1*x[i]+a0 - y[i])
     ypol = [a2 * x[i] ** 2 + a1 * x[i] + a0 for i in range(n)]
-    plt.plot(x, ypol)
+    plt.plot(x, ypol, label = 'Квадратичный')
     plt.grid(True)
     # plt.show()
     spol = 0
     for i in range(n):
         spol += (ypol[i] - y[i]) ** 2
-    # print(spol)
-    # print(sko(ypol, y))
     return ypol, spol, sko(ypol, y), a2, a1, a0
 
 
@@ -100,19 +94,14 @@ def exponential(x, y, n):
     sxx = sum([elem ** 2 for elem in x])
     sxy = sum([log(y[i]) * x[i] for i in range(n)])
     sy = sum([log(y[i]) for i in range(n)])
-    a = exp((sxy * n - sx * sy) / (sxx * n - sx * sx))
-    b = (sxx * sy - sx * sxy) / (sxx * n - sx * sx)
-    # for i in range(n):
-    #     print(a*exp(b*x[i]), a*exp(b*x[i]) - y[i])
+    a, b = find_coeffs(sx, sy, sxx, sxy, n)
     yexp = [a * exp(b * x[i]) for i in range(n)]
-    plt.plot(x, yexp)
+    plt.plot(x, yexp, label = 'Экспоненциальный')
     plt.grid(True)
     # plt.show()
     sexp = 0
     for i in range(n):
         sexp += (yexp[i] - y[i]) ** 2
-    # print(sexp)
-    # print(sko(yexp, y))
     return yexp, sexp, sko(yexp, y), a, b
 
 
@@ -123,19 +112,14 @@ def logarithmic(x, y, n):
     sy = sum(y)
     sxx = sum([(log(elem)) ** 2 for elem in x])
     sxy = sum([y[i] * log(x[i]) for i in range(n)])
-    a = (sxy * n - sx * sy) / (sxx * n - sx * sx)
-    b = (sxx * sy - sx * sxy) / (sxx * n - sx * sx)
-    # for i in range(n):
-    # print(a*log(x[i])+b, a*log(x[i])+b - y[i])
+    a, b = find_coeffs(sx, sy, sxx, sxy, n)
     ylog = [a * log(x[i]) + b for i in range(n)]
-    plt.plot(x, ylog)
+    plt.plot(x, ylog, label = 'Логарифмический')
     plt.grid(True)
     # plt.show()
     slog = 0
     for i in range(n):
         slog += (ylog[i] - y[i]) ** 2
-    # print(slog)
-    # print(sko(ylog, y))
     return ylog, slog, sko(ylog, y), a, b
 
 
@@ -145,19 +129,14 @@ def power(x, y, n):
     sy = sum([log(elem) for elem in y])
     sxx = sum([(log(elem)) ** 2 for elem in x])
     sxy = sum([log(y[i]) * log(x[i]) for i in range(n)])
-    a = exp((sxy * n - sx * sy) / (sxx * n - sx * sx))
-    b = (sxx * sy - sx * sxy) / (sxx * n - sx * sx)
-    # for i in range(n):
-    #    print(a*x[i]**b, a*x[i]**b - y[i])
+    a, b = find_coeffs(sx, sy, sxx, sxy, n)
     ystep = [a * x[i] ** b for i in range(n)]
-    plt.plot(x, ystep)
+    plt.plot(x, ystep, label = 'Степенной')
     plt.grid(True)
-    # plt.show()
+    #plt.show()
     sstep = 0
     for i in range(n):
         sstep += (ystep[i] - y[i]) ** 2
-    # print(sstep)
-    # print(sko(ystep, y))
     return ystep, sstep, sko(ystep, y), a, b
 
 
@@ -173,5 +152,8 @@ elif inp == 'f':
         x = list(map(float, f.readline().split()))
         y = list(map(float, f.readline().split()))
         main_action(x, y, out)
+        plt.plot(x,y, marker = 'o', label='Изначальный')
+        plt.legend()
+        plt.show()
 else:
     print('Неверный выбор формата ввода. Введите k или f для корректной работы.')

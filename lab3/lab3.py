@@ -112,6 +112,7 @@ def iterations_method(l3, r3, e3, output):
     iterations.append((l3 + r3) / 2)
     i = 0
     if abs(derivative_fi1(l3)) < 1 and abs(derivative_fi1(r3)) < 1:
+        print(1, abs(derivative_fi1(l3)), abs(derivative_fi1(r3)))
         while True:
             iterations.append(fi1(iterations[i]))
             i += 1
@@ -119,18 +120,21 @@ def iterations_method(l3, r3, e3, output):
                 break
 
     elif abs(derivative_fi2(l3)) < 1 and abs(derivative_fi2(r3)) < 1:
+        print(2, abs(derivative_fi1(l3)), abs(derivative_fi1(r3)))
         while True:
             iterations.append(fi2(iterations[i]))
             i += 1
             if abs(iterations[i] - iterations[i - 1]) <= e3:
                 break
     elif abs(derivative_fi3(l3)) < 1 and abs(derivative_fi3(r3)) < 1:
+        print(3, abs(derivative_fi1(l3)), abs(derivative_fi1(r3)))
         while True:
             iterations.append(fi3(iterations[i]))
             i += 1
             if abs(iterations[i] - iterations[i - 1]) <= e3:
                 break
     else:
+        print(4, abs(derivative_fi1(l3)), abs(derivative_fi1(r3)))
         while True:
 
             iterations.append(fi4(iterations[i], l3, r3))
@@ -165,7 +169,7 @@ def draw_plot():
 # l3 = 0
 
 
-# draw_plot()
+draw_plot()
 inp = input('Вы желаете вводить с клавиатуры(k) или из файла(f)?\n')
 out = input('Вы желаете выводить на консоль(k) или в файл(f)?\n')
 if inp == 'k':
