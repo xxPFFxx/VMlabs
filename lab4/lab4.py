@@ -95,6 +95,7 @@ def exponential(x, y, n):
     sxy = sum([log(y[i]) * x[i] for i in range(n)])
     sy = sum([log(y[i]) for i in range(n)])
     a, b = find_coeffs(sx, sy, sxx, sxy, n)
+    #a = exp(a)
     yexp = [a * exp(b * x[i]) for i in range(n)]
     plt.plot(x, yexp, label = 'Экспоненциальный')
     plt.grid(True)
@@ -130,6 +131,7 @@ def power(x, y, n):
     sxx = sum([(log(elem)) ** 2 for elem in x])
     sxy = sum([log(y[i]) * log(x[i]) for i in range(n)])
     a, b = find_coeffs(sx, sy, sxx, sxy, n)
+    #a = exp(a)
     ystep = [a * x[i] ** b for i in range(n)]
     plt.plot(x, ystep, label = 'Степенной')
     plt.grid(True)
@@ -146,6 +148,9 @@ if inp == 'k':
     x = list(map(float, input("Введите координаты х через пробел:\n").split()))
     y = list(map(float, input("Введите координаты y через пробел:\n").split()))
     main_action(x, y, out)
+    plt.plot(x, y, marker='o', label='Изначальный')
+    plt.legend()
+    plt.show()
 elif inp == 'f':
     path = input("Введите путь к файлу с исходными данными:\n")
     with open(path, 'r') as f:

@@ -52,7 +52,7 @@ def second_derivative(x):
 def hords_method(l1, r1, e1, output):
     hords = []
 
-    if l1 <= x1 <= r1:
+    if l1 <= x2 <= r1:
         if f(l1) * second_derivative(l1) > 0:
             hords.append(r1)
             i = 0
