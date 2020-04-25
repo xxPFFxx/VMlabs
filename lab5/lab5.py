@@ -1,4 +1,6 @@
 from lab1 import lab1
+
+
 def linear_interpolation(massx, massy, x):
     for i in range(1, len(massx)):
         if massx[i - 1] <= x <= massx[i]:
@@ -8,14 +10,30 @@ def linear_interpolation(massx, massy, x):
 
 
 def quadratic_interpolation(massx, massy, x):
-    min = abs(massx[0]-x) + abs(massx[1]-x) + abs(massx[2]-x)
+    min = abs(massx[0] - x) + abs(massx[1] - x) + abs(massx[2] - x)
     min_i = 1
-    for i in range(2,len(massx)-1):
-        if abs(massx[i-1]-x) + abs(massx[i]-x) + abs(massx[i+1]-x) < min:
-            min = abs(massx[i-1]-x) + abs(massx[i]-x) + abs(massx[i+1]-x)
+    for i in range(2, len(massx) - 1):
+        if abs(massx[i - 1] - x) + abs(massx[i] - x) + abs(massx[i + 1] - x) < min:
+            min = abs(massx[i - 1] - x) + abs(massx[i] - x) + abs(massx[i + 1] - x)
             min_i = i
-    a, b, c = lab1.solve([[massx[min_i-1]**2, massx[min_i-1], 1],[massx[min_i]**2, massx[min_i], 1],[massx[min_i+1]**2, massx[min_i+1], 1]],[massy[min_i-1], massy[min_i], massy[min_i+1]],3)
-    return a*x**2 + b*x + c
+    a, b, c = lab1.solve([[massx[min_i - 1] ** 2, massx[min_i - 1], 1], [massx[min_i] ** 2, massx[min_i], 1],
+                          [massx[min_i + 1] ** 2, massx[min_i + 1], 1]],
+                         [massy[min_i - 1], massy[min_i], massy[min_i + 1]], 3)
+    return a * x ** 2 + b * x + c
+
+
+def lagrange_polynomial(massx, massy, x):
+    s = 0
+    for i in range(len(massx)):
+        count = 1
+        for j in range(len(massx)):
+            if j != i:
+                count *= (x - massx[j])
+                count /= (massx[i]-massx[j])
+        s += massy[i]*count
+    return s
+
+
 inp = input("Вы желаете вводить с клавиатуры(k) или из файла(f)?\n")
 if inp == 'k':
     pass
@@ -30,5 +48,6 @@ elif inp == 'f':
         x2, x3 = map(float, f.readline().split())
         print('Линейная интерполяция:', linear_interpolation(table4_x, table4_y, x1))
         print('Квадратичная интерполяция:', quadratic_interpolation(table4_x, table4_y, x1))
+        print('Полином Лагранжа:', lagrange_polynomial(table4_x, table4_y, x1))
 else:
     print("Неверный ввод. Для ввода с клавиаутуры выберите k, для ввода из файла f.")
