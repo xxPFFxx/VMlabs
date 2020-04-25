@@ -1,6 +1,18 @@
 from lab1 import lab1
 
 
+def splitted_difference(a, b, f_a, f_b):
+    return (f_b - f_a) / (b - a)
+
+
+def newton_helper(massx, massy, index1, x):
+    f_xo_x1 = splitted_difference(massx[index1], massx[index1 + 1], massy[index1], massy[index1 + 1])
+    f_x1_x2 = splitted_difference(massx[index1 + 1], massx[index1 + 2], massy[index1 + 1], massy[index1 + 2])
+    f_x0_x1_x2 = splitted_difference(massx[index1], massx[index1 + 2], f_xo_x1, f_x1_x2)
+    print(f_xo_x1, f_x1_x2, f_x0_x1_x2)
+    return massy[index1] + f_xo_x1 * (x - massx[index1]) + f_x0_x1_x2 * (x - massx[index1]) * (x - massx[index1 + 1])
+
+
 def linear_interpolation(massx, massy, x):
     for i in range(1, len(massx)):
         if massx[i - 1] <= x <= massx[i]:
@@ -29,9 +41,20 @@ def lagrange_polynomial(massx, massy, x):
         for j in range(len(massx)):
             if j != i:
                 count *= (x - massx[j])
-                count /= (massx[i]-massx[j])
-        s += massy[i]*count
+                count /= (massx[i] - massx[j])
+        s += massy[i] * count
     return s
+
+
+def newton_unequal_nodes(massx, massy, x):
+    index1 = index2 = 0
+    for i in range(len(massx)):
+        if x > massx[i]:
+            index1 = i - 1
+            index2 = i
+    s1 = newton_helper(massx, massy, index1, x)
+    s2 = newton_helper(massx, massy, index2, x)
+    return (s1 + s2) / 2
 
 
 inp = input("Вы желаете вводить с клавиатуры(k) или из файла(f)?\n")
@@ -49,5 +72,6 @@ elif inp == 'f':
         print('Линейная интерполяция:', linear_interpolation(table4_x, table4_y, x1))
         print('Квадратичная интерполяция:', quadratic_interpolation(table4_x, table4_y, x1))
         print('Полином Лагранжа:', lagrange_polynomial(table4_x, table4_y, x1))
+        print('Полином Ньютона:', newton_unequal_nodes(table4_x, table4_y, x4))
 else:
     print("Неверный ввод. Для ввода с клавиаутуры выберите k, для ввода из файла f.")
