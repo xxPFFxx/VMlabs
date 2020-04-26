@@ -1,15 +1,19 @@
 from lab1 import lab1
+from math import *
 
 
 def splitted_difference(a, b, f_a, f_b):
     return (f_b - f_a) / (b - a)
 
 
+def finite_difference(a, b):
+    return a - b
+
+
 def newton_helper(massx, massy, index1, x):
     f_xo_x1 = splitted_difference(massx[index1], massx[index1 + 1], massy[index1], massy[index1 + 1])
     f_x1_x2 = splitted_difference(massx[index1 + 1], massx[index1 + 2], massy[index1 + 1], massy[index1 + 2])
     f_x0_x1_x2 = splitted_difference(massx[index1], massx[index1 + 2], f_xo_x1, f_x1_x2)
-    print(f_xo_x1, f_x1_x2, f_x0_x1_x2)
     return massy[index1] + f_xo_x1 * (x - massx[index1]) + f_x0_x1_x2 * (x - massx[index1]) * (x - massx[index1 + 1])
 
 
@@ -57,6 +61,47 @@ def newton_unequal_nodes(massx, massy, x):
     return (s1 + s2) / 2
 
 
+def newton_counter(i, t, table):
+    if i == 0:
+        return table[0][0]
+    else:
+        return newton_counter(i - 1, t, table)
+
+
+def newton_equal_nodes(massx, massy, x):
+    table = []
+    s = 0
+    h = massx[1] - massx[0]
+    for i in range(len(massx)):
+        if x > massx[i]:
+            max_i = i
+    if x <= (massx[0] + massx[-1]) / 2:
+        table.append(massy[max_i:])
+        for j in range(1, len(massx) - 1):
+            table.append([finite_difference(table[j - 1][i + 1], table[j - 1][i]) for i in range(len(massx) - 1 - j)])
+        t = (x - massx[max_i]) / h
+        m = 1
+        f = 0
+        for i in range(len(table)):
+            s += m * table[i][0]
+            m *= (t - i)
+            f += 1
+            m /= f
+        return s
+    else:
+        table.append(massy[:max_i+2])
+        for j in range(1, len(massx) - 1):
+            table.append([finite_difference(table[j - 1][i + 1], table[j - 1][i]) for i in range(len(massx) - 1 - j)])
+        t = (x - massx[max_i+1]) / h
+        m = 1
+        f = 0
+        for i in range(len(table)):
+            s += m * table[i][-1]
+            m *= (t + i)
+            f += 1
+            m /= f
+        return s
+
 inp = input("Вы желаете вводить с клавиатуры(k) или из файла(f)?\n")
 if inp == 'k':
     pass
@@ -73,5 +118,7 @@ elif inp == 'f':
         print('Квадратичная интерполяция:', quadratic_interpolation(table4_x, table4_y, x1))
         print('Полином Лагранжа:', lagrange_polynomial(table4_x, table4_y, x1))
         print('Полином Ньютона:', newton_unequal_nodes(table4_x, table4_y, x4))
+        print('Полином Нютона вперед:', newton_equal_nodes(table8_x, table8_y, x2))
+        print('Полином Нютона назад:', newton_equal_nodes(table8_x, table8_y, x3))
 else:
     print("Неверный ввод. Для ввода с клавиаутуры выберите k, для ввода из файла f.")
