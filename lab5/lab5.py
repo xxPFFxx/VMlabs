@@ -104,7 +104,15 @@ def newton_equal_nodes(massx, massy, x):
 
 inp = input("Вы желаете вводить с клавиатуры(k) или из файла(f)?\n")
 if inp == 'k':
-    pass
+    table_x = list(map(float, input('Введите координаты х через пробел:\n').split()))
+    table_y = list(map(float, input('Введите координаты y через пробел:\n').split()))
+    x = float(input('Введите координату x, для которой хотите найти приближенное значение функции:\n'))
+    print('Линейная интерполяция:', linear_interpolation(table_x, table_y, x))
+    print('Квадратичная интерполяция:', quadratic_interpolation(table_x, table_y, x))
+    print('Полином Лагранжа:', lagrange_polynomial(table_x, table_y, x))
+    print('Полином Ньютона:', newton_unequal_nodes(table_x, table_y, x))
+    print('Полином Нютона вперед:', newton_equal_nodes(table_x, table_y, x))
+    print('Полином Нютона назад:', newton_equal_nodes(table_x, table_y, x))
 elif inp == 'f':
     path = input("Введите путь до файла с исходными данными:\n")
     with open(path, 'r') as f:
